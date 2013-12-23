@@ -1,11 +1,11 @@
-// var app = require('http').createServer(function(request, response) {});
+var app = require('http').createServer(function(request, response) {});
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
-var io = require('socket.io').listen(port);
+var io = require('socket.io').listen(app);
 // io.set('origins', 'http://kent.doddsfamily.us');
 io.set('origins', 'localhost:*,http://kent.doddsfamily.us');
-// app.listen(port, ip);
+app.listen(port, ip);
 
 var request = require('request');
 var xml2js = require('xml2js');
