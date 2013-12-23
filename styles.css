@@ -233,7 +233,7 @@
     opacity: 1;
   }
   
-  .genie-container.visible {
+  .genie-container.visible, .alert-container.visible {
     z-index: 1050;
   }
   
