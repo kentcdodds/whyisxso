@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 body {
   text-align: center;
   position: absolute;
@@ -16,21 +20,22 @@ body {
 #content {
   display: inline-block;
   text-align: left;
-  width: 700px;
-  margin: 20px;
-  margin-top: 50px;
+  width: 850px;
+  min-height: 800px;
+  height: 100%;
+  margin: 70px auto -250px; /* the bottom margin is the negative value of the footer's height */
 }
 
 #search-input {
-  width: 44%;
+  width: 54%;
   display: inline;
-  height: 60px;
-  font-size: 44px;
+  height: 90px;
+  font-size: 60px;
   padding: 0px 12px 0px 12px;
 }
 
 #why-is {
-  font-size: 50px;
+  font-size: 60px;
   font-weight: bold;
 }
 
@@ -38,11 +43,106 @@ body {
   cursor: pointer;
 }
 
+.alert-container {
+  position: relative;
+  transition: all .2s ease-in-out;
+  opacity: 0;
+  z-index: -1;
+}
+
+.alert {
+  position: absolute;
+  width: 100%;
+  box-shadow: 0px 0px 18px 1px #888
+}
+
 .results {
   opacity: 0;
   transition: all .2s ease-in-out;
+  font-size: 20px;
 }
 
-.results.visible {
+.unique-suggestion {
+  color: #8F8F8F;
+  font-size: 80%;
+}
+
+#footer, #bottom-stuff {
+  height: 250px;
+}
+
+#bottom-stuff > div {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+#genie-notice {
+  margin-bottom: 40px;
+}
+
+.rub-the-lamp {
+  background: rgba(0, 0, 0, 0);
+  color: #428BCA;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rub-the-lamp:hover, .rub-the-lamp:focus {
+  color: #2A6496;
+  outline: 0;
+  text-decoration: underline;
+}
+
+.genie-container {
+  text-align: left;
+  opacity: 0;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  z-index: -1;
+  -mos-border-radius: 8px;
+  border-radius: 8px;
+  color: #333;
+  background-color: #F7F7F7;
+  box-shadow: 0px 0px 26px 6px #888888;
+  width: 600px;
+  margin-left: -300px;
+  padding: 16px;
+  transition: all .2s ease-in-out;
+}
+
+.visible {
   opacity: 1;
+  z-index: 1050;
+}
+
+.genie-container > input {
+  -mos-border-radius: 8px;
+  border-radius: 8px;
+  margin: 0px;
+  width: 100%;
+  padding: 0px 12px 0px 12px;
+  font-size: 40px;
+  height: 60px;
+}
+
+.genie-wishes {
+  margin-top: 10px;
+  cursor: pointer;
+  overflow-y: auto;
+  width: 100%;
+  max-height: 300px;
+  font-size: 30px;
+}
+
+.genie-wish {
+  padding: 0px 12px 0px 12px;
+  line-height: 50px;
+}
+
+.genie-wish.focused {
+  -mos-border-radius: 8px;
+  border-radius: 8px;
+  background-color: #DDD;
 }

@@ -1,4 +1,5 @@
-var io = require('socket.io').listen(process.env.OPEN_SHIFT_NODEJS_PORT || 3000);
+console.log(process.env.OPEN_SHIFT_NODEJS_PORT);
+var io = require('socket.io').listen(process.env.OPENSHIFT_NODEJS_PORT || 3000);
 
 var request = require('request');
 var xml2js = require('xml2js');

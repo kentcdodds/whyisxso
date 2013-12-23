@@ -1,6 +1,16 @@
 <html ng-app="app">
   <head>
     <title>Why is "X" so...</title>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="What people search about is very telling of the world's opinion of something. Get a feel for the world's opinion by seeing the recommendations Google and Bing give for Why is x so..." />
+    <meta name="keywords" content="Why is x so, Why is Google so, Why is Bing so, Google, Bing" />
+    <meta name="author" content="Kent C. Dodds" />
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -9,27 +19,79 @@
       <div id="why-is">
         <span>Why 
           <span class="dropdown">
-          <span id="verb" ng-click="verb=(verb==='is' ? 'are' : 'is')">
+          <span id="verb" ng-click="verb=(verb==='is' ? 'are' : 'is')" ga>
             {{verb}}
           </span>
         </span> 
         </span><input id="search-input" type="text" ng-model="searchInput" class="form-control" autofocus><span> so...</span>
       </div>
+
+      <div class="alert-container" ng-class="{visible: alert.visible}">
+        <div class="alert alert-{{alert.type}}">
+          <button type="button" class="close" aria-hidden="true" ng-click="alert.visible = false">×</button>
+          <strong>{{alert.strong}}</strong> {{alert.content}} <a ng-if="alert.link" ng-href="{{alert.link}}" ga class="small">Learn more...</a>
+        </div>
+      </div>
+
       <div class="results col-md-6" ng-class="{visible: suggestions.google.length}">
         <h2>Google</h2>
         <ul>
-          <li ng-repeat="suggestion in suggestions.google">{{suggestion}}</li>
+          <li ng-repeat="suggestion in suggestions.google"><a ng-href="https://www.google.com/search?q={{encodeURIComponent(suggestion)}}" target="_blank" ng-class="{'unique-suggestion': !isSame(suggestion, 'bing')}" ga>{{suggestion}}</a></li>
         </ul>
       </div>
       <div class="results col-md-6" ng-class="{visible: suggestions.bing.length}">
         <h2>Bing</h2>
         <ul>
-          <li ng-repeat="suggestion in suggestions.bing">{{suggestion}}</li>
+          <li ng-repeat="suggestion in suggestions.bing"><a ng-href="https://www.google.com/search?q={{encodeURIComponent(suggestion)}}" target="_blank" ng-class="{'unique-suggestion': !isSame(suggestion, 'google')}" ga>{{suggestion}}</a></li>
         </ul>
       </div>
     </div>
+    <div id="footer">
+      <h3 id="genie-notice">
+        <small>This site is empowered by <a href="http://kentcdodds.github.com/genie" ga>genie</a> (press <span class="rub-the-lamp" ng-click="genieVisible=!genieVisible; $event.stopPropagation();">ctrl+space</span>)</small>
+      </h3>
+      <div id="bottom-stuff">
+        <div id="site-buttons">
+          <iframe src="//ghbtns.com/github-btn.html?user=kentcdodds&repo=whyisxso&type=watch&count=true" height="20" width="118" frameborder="0" scrolling="0" style="width:118px; height: 20px;" allowTransparency="true"></iframe>
+          <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kent.doddsfamily.us/whyisxso" data-via="kentcdodds" data-text='Why is "X" so... - What does the world think about "X"?' data-hashtags="#whyisxso" data-lang="en">Tweet</a>
+          <div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300" data-href="http://kent.doddsfamily.us/whyisxso"></div>
+        </div>
+        <div id="follow-social">
+          <iframe src="http://ghbtns.com/github-btn.html?user=kentcdodds&type=follow&count=true" height="20" width="168" frameborder="0" scrolling="0" style="width:168px; height: 20px;" allowTransparency="true"></iframe>
+          <a href="https://twitter.com/kentcdodds" class="twitter-follow-button" data-show-count="true" data-lang="en">Follow @kentcdodds</a>
+          <div class="g-follow" data-annotation="bubble" data-height="20" data-href="//plus.google.com/114245123507194646768" data-rel="author"></div>
+        </div>
+      </div>
+    </div>
+    <div ux-lamp lamp-visible="genieVisible" rub-class="visible" local-storage="true" wish-callback="wishMade(wish)"></div>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <script src="vendor/ga.js"></script>
+    <script src="vendor/genie.min.js"></script>
+    <script src="vendor/uxGenie.js"></script>
+    
     <script src="app.js"></script>
+    <!-- Twitter -->
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+    <!-- Google+ -->
+    <script type="text/javascript">
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/platform.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-42764912-1', 'doddsfamily.us');
+      ga('send', 'pageview');
+
+    </script>
   </body>
 </html>
