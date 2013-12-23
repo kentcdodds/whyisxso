@@ -47,7 +47,8 @@
 
     var sendAnalytics = null;
     var startSearch = null;
-    $scope.$watch('searchInput', function(newVal) {
+    
+    $scope.searchUpdated = function(newVal) {
       if (newVal) {
         var search = 'Why ' + $scope.verb + ' ' + newVal + ' so';
         if (startSearch) {
@@ -68,7 +69,9 @@
       } else {
         resetSuggestions();
       }
-    });
+    }
+    
+    $scope.$watch('searchInput', $scope.searchUpdated);
 
     $scope.isSame = function(suggestion, provider) {
       return $scope.suggestions[provider].indexOf(suggestion) > -1;

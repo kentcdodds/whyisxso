@@ -19,7 +19,7 @@
       <div id="why-is">
         <span>Why 
           <span class="dropdown">
-          <span id="verb" ng-click="verb=(verb==='is' ? 'are' : 'is')" ga>
+          <span id="verb" ng-click="verb=(verb==='is' ? 'are' : 'is'); searchUpdated(searchInput)" ga>
             {{verb}}
           </span>
         </span> 
@@ -32,37 +32,38 @@
           <strong>{{alert.strong}}</strong> {{alert.content}} <a ng-if="alert.link" ng-href="{{alert.link}}" ga class="small">Learn more...</a>
         </div>
       </div>
-
-      <div class="results col-md-6" ng-class="{visible: suggestions.google.length}">
-        <h2>Google</h2>
-        <ul>
-          <li ng-repeat="suggestion in suggestions.google"><a ng-href="https://www.google.com/search?q={{encodeURIComponent(suggestion)}}" target="_blank" ng-class="{'unique-suggestion': !isSame(suggestion, 'bing')}" ga>{{suggestion}}</a></li>
-        </ul>
-      </div>
-      <div class="results col-md-6" ng-class="{visible: suggestions.bing.length}">
-        <h2>Bing</h2>
-        <ul>
-          <li ng-repeat="suggestion in suggestions.bing"><a ng-href="https://www.google.com/search?q={{encodeURIComponent(suggestion)}}" target="_blank" ng-class="{'unique-suggestion': !isSame(suggestion, 'google')}" ga>{{suggestion}}</a></li>
-        </ul>
-      </div>
-    </div>
-    <div id="footer">
-      <h3 id="genie-notice">
-        <small>This site is empowered by <a href="http://kentcdodds.github.com/genie" ga>genie</a> (press <span class="rub-the-lamp" ng-click="genieVisible=!genieVisible; $event.stopPropagation();">ctrl+space</span>)</small>
-      </h3>
-      <div id="bottom-stuff">
-        <div id="site-buttons">
-          <iframe src="//ghbtns.com/github-btn.html?user=kentcdodds&repo=whyisxso&type=watch&count=true" height="20" width="118" frameborder="0" scrolling="0" style="width:118px; height: 20px;" allowTransparency="true"></iframe>
-          <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kent.doddsfamily.us/whyisxso" data-via="kentcdodds" data-text='Why is "X" so... - What does the world think about "X"?' data-hashtags="#whyisxso" data-lang="en">Tweet</a>
-          <div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300" data-href="http://kent.doddsfamily.us/whyisxso"></div>
+      <div id="results-container">
+        <div class="results col-md-6" ng-class="{visible: suggestions.google.length}">
+          <h1>Google</h1>
+          <ul>
+            <li ng-repeat="suggestion in suggestions.google"><a ng-href="https://www.google.com/search?q={{encodeURIComponent(suggestion)}}" target="_blank" ng-class="{'unique-suggestion': !isSame(suggestion, 'bing')}" ga>{{suggestion}}</a></li>
+          </ul>
         </div>
-        <div id="follow-social">
-          <iframe src="http://ghbtns.com/github-btn.html?user=kentcdodds&type=follow&count=true" height="20" width="168" frameborder="0" scrolling="0" style="width:168px; height: 20px;" allowTransparency="true"></iframe>
-          <a href="https://twitter.com/kentcdodds" class="twitter-follow-button" data-show-count="true" data-lang="en">Follow @kentcdodds</a>
-          <div class="g-follow" data-annotation="bubble" data-height="20" data-href="//plus.google.com/114245123507194646768" data-rel="author"></div>
+        <div class="results col-md-6" ng-class="{visible: suggestions.bing.length}">
+          <h1>Bing</h1>
+          <ul>
+            <li ng-repeat="suggestion in suggestions.bing"><a ng-href="https://www.google.com/search?q={{encodeURIComponent(suggestion)}}" target="_blank" ng-class="{'unique-suggestion': !isSame(suggestion, 'google')}" ga>{{suggestion}}</a></li>
+          </ul>
         </div>
       </div>
     </div>
+      <div id="footer">
+        <h3 id="genie-notice">
+          <small>This site is empowered by <a href="http://kentcdodds.github.com/genie" ga>genie</a> (press <span class="rub-the-lamp" ng-click="genieVisible=!genieVisible; $event.stopPropagation();">ctrl+space</span>)</small>
+        </h3>
+        <div id="bottom-stuff">
+          <div id="site-buttons">
+            <iframe src="//ghbtns.com/github-btn.html?user=kentcdodds&repo=whyisxso&type=watch&count=true" height="20" width="118" frameborder="0" scrolling="0" style="width:118px; height: 20px;" allowTransparency="true"></iframe>
+            <a href="//twitter.com/share" class="twitter-share-button" data-url="http://kent.doddsfamily.us/whyisxso" data-via="kentcdodds" data-text='Why is "X" so... - What does the world think about "X"?' data-hashtags="#whyisxso" data-lang="en">Tweet</a>
+            <div class="g-plusone" data-size="medium" data-annotation="inline" data-width="300" data-href="http://kent.doddsfamily.us/whyisxso"></div>
+          </div>
+          <div id="follow-social">
+            <iframe src="http://ghbtns.com/github-btn.html?user=kentcdodds&type=follow&count=true" height="20" width="168" frameborder="0" scrolling="0" style="width:168px; height: 20px;" allowTransparency="true"></iframe>
+            <a href="https://twitter.com/kentcdodds" class="twitter-follow-button" data-show-count="true" data-lang="en">Follow @kentcdodds</a>
+            <div class="g-follow" data-annotation="bubble" data-height="20" data-href="//plus.google.com/114245123507194646768" data-rel="author"></div>
+          </div>
+        </div>
+      </div>
     <div ux-lamp lamp-visible="genieVisible" rub-class="visible" local-storage="true" wish-callback="wishMade(wish)"></div>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
