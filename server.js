@@ -1,5 +1,10 @@
+var app = require('http').createServer(function(){
+  // Do nothing...
+});
+
 console.log(process.env.OPENSHIFT_NODEJS_PORT);
-var io = require('socket.io').listen(process.env.OPENSHIFT_NODEJS_PORT || 3000);
+var io = require('socket.io').listen(app);
+app.listen(process.env.OPENSHIFT_NODEJS_PORT || 3000, process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 
 var request = require('request');
 var xml2js = require('xml2js');
