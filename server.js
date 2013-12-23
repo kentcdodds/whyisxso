@@ -4,7 +4,7 @@ var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 var io = require('socket.io').listen(app);
 // io.set('origins', 'http://kent.doddsfamily.us');
-io.set('origins', 'http://kent.doddsfamily.us');
+io.set('origins', '*:*');
 app.listen(port, ip);
 
 var request = require('request');
