@@ -2,10 +2,34 @@
   <head>
     <title>Why is "X" so...</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body ng-controller="MainCtrl">
-    <h1>Coming soon...</h1>
-    <input type="text" ng-model="">
+    <div id="content" class="ng-cloak">
+      <div id="why-is">
+        <span>Why 
+          <span class="dropdown">
+          <span id="verb" ng-click="verb=(verb==='is' ? 'are' : 'is')">
+            {{verb}}
+          </span>
+        </span> 
+        </span><input id="search-input" type="text" ng-model="searchInput" class="form-control"><span> so...</span>
+      </div>
+      <div class="results col-md-6" ng-class="{visible: suggestions.google.length}">
+        <h2>Google</h2>
+        <ul>
+          <li ng-repeat="suggestion in suggestions.google">{{suggestion}}</li>
+        </ul>
+      </div>
+      <div class="results col-md-6" ng-class="{visible: suggestions.bing.length}">
+        <h2>Bing</h2>
+        <ul>
+          <li ng-repeat="suggestion in suggestions.bing">{{suggestion}}</li>
+        </ul>
+      </div>
+    </div>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>

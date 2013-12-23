@@ -1,0 +1,21 @@
+{
+  "name": "whyisxso",
+  "version": "0.0.1",
+  "private": true,
+  "description": "This is the service for whyisxso. It's a basic proxy.",
+  "homepage": "https://github.com/kentcdodds/whyisxso",
+  "authors": [
+    "Kent C. Dodds <kent@doddsfamily.us>"
+  ],
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "socket.io": "~0.9.16",
+    "xml2js": "~0.4.0",
+    "request": "~2.30.0"
+  }
+}
