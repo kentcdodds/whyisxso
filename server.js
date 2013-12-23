@@ -1,9 +1,12 @@
-console.log(process.env.OPEN_SHIFT_NODEJS_PORT);
+console.log(process.env.OPENSHIFT_NODEJS_PORT);
 var io = require('socket.io').listen(process.env.OPENSHIFT_NODEJS_PORT || 3000);
 
 var request = require('request');
 var xml2js = require('xml2js');
 var parser = new xml2js.Parser();
+
+console.log(io.hasOwnProperty('sockets'), io.sockets);
+console.log(io.sockets.on);
 
 io.sockets.on('connection', function (socket) {
   socket.on('searchInput:changed', function (data) {
