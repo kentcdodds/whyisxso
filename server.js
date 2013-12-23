@@ -1,11 +1,14 @@
 var app = require('http').createServer(function(request, response) {
+  
   var allowedOrigins = [
     'localhost',
     'http://kent.doddsfamily.us'
   ];
   var origin = request.headers.origin;
+
+  console.log('>>>>>>>>>>>>>>>>> origin: ', origin);
   if (allowedOrigins.indexOf(origin) === -1) {
-    console.log('>>>>>>>>>>>>>>>>> origin not allowed: ', origin);
+    console.log('origin not allowed');
     return;
   }
   var headers =   {
@@ -16,13 +19,15 @@ var app = require('http').createServer(function(request, response) {
     "content-length": 0
   };
 
-  response.end('CORS enabled.');    
+  response.end('CORS enabled.');
+
 });
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 var io = require('socket.io').listen(app);
-io.set('origins', '*:*');
+// io.set('origins', 'http://kent.doddsfamily.us');
+io.set('origins', 'localhost:*,http://kent.doddsfamily.us');
 app.listen(port, ip);
 
 var request = require('request');
