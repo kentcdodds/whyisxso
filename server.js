@@ -1,4 +1,5 @@
-var app = require('http').createServer(function( request, response ){
+var app = require('http').createServer(function(request, response) {
+  console.log('>>>>>>>>>>>>>>>>>>', request.headers.origin);
   var origin = (request.headers.origin || "*");
   var headers =   {
     "access-control-allow-origin": origin,
@@ -8,7 +9,7 @@ var app = require('http').createServer(function( request, response ){
     "content-length": 0
   };
 
-  response.end('CORS enabled.');
+  response.end('CORS enabled.');    
 });
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
