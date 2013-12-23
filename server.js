@@ -1,6 +1,13 @@
 var app = require('http').createServer(function(request, response) {
-  console.log('>>>>>>>>>>>>>>>>>>', request.headers.origin);
-  var origin = (request.headers.origin || "*");
+  var allowedOrigins = [
+    'localhost',
+    'http://kent.doddsfamily.us'
+  ];
+  var origin = request.headers.origin;
+  if (allowedOrigins.indexOf(origin) === -1) {
+    console.log('>>>>>>>>>>>>>>>>> origin not allowed: ', origin);
+    return;
+  }
   var headers =   {
     "access-control-allow-origin": origin,
     "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
