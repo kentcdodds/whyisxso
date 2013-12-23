@@ -1,27 +1,4 @@
-var app = require('http').createServer(function(request, response) {
-  
-  var allowedOrigins = [
-    'localhost',
-    'http://kent.doddsfamily.us'
-  ];
-  var origin = request.headers.origin;
-
-  console.log('>>>>>>>>>>>>>>>>> origin: ', origin);
-  if (allowedOrigins.indexOf(origin) === -1) {
-    console.log('origin not allowed');
-    return;
-  }
-  var headers =   {
-    "access-control-allow-origin": origin,
-    "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "access-control-allow-headers": "content-type, accept",
-    "access-control-max-age": 10,
-    "content-length": 0
-  };
-
-  response.end('CORS enabled.');
-
-});
+var app = require('http').createServer(function(request, response) {});
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 var ip = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
