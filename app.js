@@ -111,6 +111,7 @@
 
     var sendAnalytics = null;
     var startSearch = null;
+    var firstSearchUpdate = true;
 
     $scope.searchUpdated = function() {
       if ($scope.searchInput) {
@@ -122,7 +123,7 @@
         startSearch = $timeout(function() {
           $location.search('verb', $scope.verb);
           $location.search('noun', $scope.searchInput);
-          $window.document.title = search;
+          $window.document.title = search + '...';
           socket.emit('searchInput:changed', {search: search});
         }, 200);
 
@@ -134,10 +135,14 @@
           ga('send', 'event', 'searchInput', 'typed', search);
         }, 750, false);
       } else {
-        $location.search('verb', null);
-        $location.search('noun', null);
-        resetSuggestions();
-        $window.document.title = 'Why is "X" so...';
+        if (!firstSearchUpdate) {
+          $location.search('verb', null);
+          $location.search('noun', null);
+          resetSuggestions();
+          $window.document.title = 'Why is "X" so...';
+        } else {
+          firstSearchUpdate = false;
+        }
       }
     }
     
