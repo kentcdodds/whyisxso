@@ -36,8 +36,46 @@
     }
     resetSuggestions();
 
+    var getOptions = function() {
+      var randomThumb = Math.floor(Math.random() * 15);
+      return {
+        url: encodeURIComponent($window.location.href),
+        title: encodeURIComponent($scope.searchInput ? 'Why ' + $scope.verb + ' ' + $scope.searchInput + ' so...' : 'Why is "X" so...'),
+        description: encodeURIComponent('What search engines recommend to complete this statement is very telling...'),
+        hashtags: encodeURIComponent('whyisxso'),
+        image: encodeURIComponent('http://kent.doddsfamily.us/whyisxso/thumbnails/thumbnail' + randomThumb + '.png')
+      };
+    }
+
     $scope.share = {
-      facebook: ''
+      facebook: function() {
+        var options = getOptions();
+        var fUrl = encodeURIComponent('p[url]') + '=' + options.url;
+        var fTitle = encodeURIComponent('p[title]') + '=' + options.title;
+        var fSummary = encodeURIComponent('p[summary]') + '=' + options.description ;
+        var fImages = encodeURIComponent('p[images][0]') + '=' + options.image;
+        var uri = 'http://www.facebook.com/sharer.php?s=100&';
+
+        $window.open(uri + [fUrl, fTitle, fSummary, fImages].join('&'));
+      },
+      google: function() {
+        var options = getOptions();
+        var gUrl = 'url=' + options.url;
+        var uri = 'http://plus.google.com/share?';
+        // One day maybe they'll let us do more...
+
+        $window.open(uri + [gUrl].join('&'));
+      },
+      twitter: function() {
+        var options = getOptions();
+        var tUrl = 'url=' + options.url;
+        var tSummary = 'text=' + options.description;
+        var tHashtag = 'hashtags=' + options.hashtags;
+        var tVia = 'via=kentcdodds';
+        var uri = 'http://twitter.com/intent/tweet?';
+
+        $window.open(uri + [tUrl, tSummary, tHashtag, tVia].join('&'));
+      }
     };
 
     $scope.verb = 'is';
@@ -62,7 +100,6 @@
         startSearch = $timeout(function() {
           $location.search('verb', $scope.verb);
           $location.search('noun', $scope.searchInput);
-          _updateShareLinks();
           socket.emit('searchInput:changed', {search: search});
         }, 200);
 
@@ -90,45 +127,6 @@
       if (wish && wish.magicWords) {
         ga('send', 'event', 'wish', 'made', wish.magicWords);
       }
-    };
-
-    var _updateShareLinks = function() {
-      var randomThumb = Math.floor(Math.random() * 15);
-      var options = {
-        url: encodeURIComponent($window.location.href),
-        title: encodeURIComponent($scope.searchInput ? 'Why ' + $scope.verb + ' ' + $scope.searchInput + ' so...' : 'Why is "X" so...'),
-        description: encodeURIComponent('What search engines recommend to complete this statement is very telling...'),
-        hashtags: encodeURIComponent('whyisxso'),
-        image: encodeURIComponent('http://kent.doddsfamily.us/whyisxso/thumbnails/thumbnail' + randomThumb + '.png')
-      };
-
-      $scope.share.facebook = (function() {
-        var fUrl = encodeURIComponent('p[url]') + '=' + options.url;
-        var fTitle = encodeURIComponent('p[title]') + '=' + options.title;
-        var fSummary = encodeURIComponent('p[summary]') + '=' + options.description ;
-        var fImages = encodeURIComponent('p[images][0]') + '=' + options.image;
-        var uri = 'http://www.facebook.com/sharer.php?s=100&';
-
-        return uri + [fUrl, fTitle, fSummary, fImages].join('&');
-      })();
-
-      $scope.share.twitter = (function() {
-        var tUrl = 'url=' + options.url;
-        var tSummary = 'text=' + options.description;
-        var tHashtag = 'hashtags=' + options.hashtags;
-        var tVia = 'via=kentcdodds';
-        var uri = 'http://twitter.com/intent/tweet?';
-
-        return uri + [tUrl, tSummary, tHashtag, tVia].join('&');
-      })();
-
-      $scope.share.google = (function() {
-        var gUrl = 'url=' + options.url;
-        var uri = 'http://plus.google.com/share?';
-        // One day maybe they'll let us do more...
-
-        return uri + [gUrl].join('&');
-      })();
     };
 
     $scope.alert = {};

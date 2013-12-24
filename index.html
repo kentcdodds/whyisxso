@@ -8,6 +8,7 @@
     <meta name="description" content="What people search about is very telling of the world's opinion of something. Get a feel for the world's opinion by seeing the recommendations Google and Bing give for Why is x so..." />
     <meta name="keywords" content="Why is x so, Why is Google so, Why is Bing so, Google, Bing" />
     <meta name="author" content="Kent C. Dodds" />
+    <link rel="image_src" href="//www.spendmycents.com/thumbnails/thumbnail0.png">
 
     <link rel="icon" type="image/png" href="/favicon.png">
     
@@ -49,9 +50,9 @@
       </div>
       <div id="share-search" class="row" ng-show="suggestions.google.length || suggestions.bing.length">
         Share this search:
-        <a title="Share search on Twitter" ng-href="{{share.twitter}}" target="_blank">Twitter</a> |
-        <a title="Share search on Facebook" ng-href="{{share.facebook}}" target="_blank">Facebook</a> |
-        <a title="Share search on Google+" ng-href="{{share.google}}" target="_blank">Google+</a>
+        <span title="Share search on Twitter" ng-click="share.twitter()" target="_blank">Twitter</span> |
+        <span title="Share search on Facebook" ng-click="share.facebook()" target="_blank">Facebook</span> |
+        <span title="Share search on Google+" ng-click="share.google()" target="_blank">Google+</span>
       </div>
     </div>
 
