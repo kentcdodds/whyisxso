@@ -27,7 +27,7 @@
   });
 
   // Controller
-  app.controller('MainCtrl', function($scope, $timeout, socket) {
+  app.controller('MainCtrl', function($scope, $timeout, socket, $location) {
     function resetSuggestions() {
       $scope.suggestions = {
         google: [],
@@ -47,15 +47,17 @@
 
     var sendAnalytics = null;
     var startSearch = null;
-    
-    $scope.searchUpdated = function(newVal) {
-      if (newVal) {
-        var search = 'Why ' + $scope.verb + ' ' + newVal + ' so';
+
+    $scope.searchUpdated = function() {
+      if ($scope.searchInput) {
+        var search = 'Why ' + $scope.verb + ' ' + $scope.searchInput + ' so';
         if (startSearch) {
           $timeout.cancel(startSearch);
         }
 
         startSearch = $timeout(function() {
+          $location.search('verb', $scope.verb);
+          $location.search('noun', $scope.searchInput);
           socket.emit('searchInput:changed', {search: search});
         }, 200);
 
@@ -67,11 +69,13 @@
           ga('send', 'event', 'searchInput', 'typed', search);
         }, 750, false);
       } else {
+        $location.search('verb', null);
+        $location.search('noun', null);
         resetSuggestions();
       }
     }
     
-    $scope.$watch('searchInput', $scope.searchUpdated);
+    $scope.$watch('verb + searchInput', $scope.searchUpdated);
 
     $scope.isSame = function(suggestion, provider) {
       return $scope.suggestions[provider].indexOf(suggestion) > -1;
@@ -106,5 +110,16 @@
     addQuestionWish('Can I change this from "is" to "are"?', 'Yes', 'just click on the word "is"', 'info');
     addQuestionWish('What is this magic box?', 'Genie\'s Lamp.', 'Genie is an open source library that I wrote. I can\'t build a site without it anymore', 'info', 'http://kent.doddsfamily.us/genie');
     addQuestionWish('Who are you?', 'Kent C. Dodds', 'I am a web developer. I love JavaScript, AngularJS, NodeJS, etc. I\'m a family man with one wife, and two kids.', 'info', 'http://kent.doddsfamily.us');
+
+    $scope.$watch(function() {
+      return $location.search();
+    }, function(queryParams) {
+      if (queryParams.verb) {
+        if (queryParams.verb === 'is' || queryParams.verb === 'are') {
+          $scope.verb = queryParams.verb;
+        }
+      }
+      $scope.searchInput = queryParams.noun || $scope.searchInput;
+    });
   });
 })();
