@@ -128,7 +128,7 @@
         // One day maybe they'll let us do more...
 
         return uri + [gUrl].join('&');
-      });
+      })();
     };
 
     $scope.alert = {};
