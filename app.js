@@ -56,13 +56,13 @@
     };
 
     var getOptions = function() {
-      var randomThumb = $scope.thumbMap[$scope.searchInput.toLowerCase()];
+      var randomThumb = $scope.thumbMap[$scope.noun.toLowerCase()];
       if (!randomThumb && randomThumb < 0) {
         randomThumb = Math.floor(Math.random() * 15);
       }
       return {
         url: encodeURIComponent($window.location.href),
-        title: encodeURIComponent($scope.searchInput ? 'Why ' + $scope.verb + ' ' + $scope.searchInput + ' so...' : 'Why is "X" so...'),
+        title: encodeURIComponent($scope.noun ? 'Why ' + $scope.verb + ' ' + $scope.noun + ' so...' : 'Why is "X" so...'),
         description: encodeURIComponent('What search engines recommend to complete this statement is very telling...'),
         hashtags: encodeURIComponent('whyisxso'),
         image: encodeURIComponent('http://kent.doddsfamily.us/whyisxso/thumbnails/thumbnail' + randomThumb + '.png')
@@ -100,13 +100,34 @@
       }
     };
 
+    function _restoreState() {
+      $location.search('verb', null);
+      $location.search('noun', null);
+      resetSuggestions();
+      $window.document.title = 'Why is "X" so...';
+    };
+
     $scope.verb = 'is';
     $scope.genieVisible = false;
 
     $scope.encodeURIComponent = encodeURIComponent;
 
+    $scope.needTip = true;
+
     socket.on('suggestions:received', function(data) {
       $scope.suggestions = data;
+      if ($scope.needTip) {
+        $scope.needTip = false;
+        $timeout(function() {
+          updateAlert('Tip:', 'Try clicking on the word "is"');
+          $timeout(function() {
+            updateAlert();
+          }, 4000);
+        }, 3000);
+      }
+      if (!$scope.noun) {
+        _restoreState();
+      }
     });
 
     var sendAnalytics = null;
@@ -114,15 +135,15 @@
     var firstSearchUpdate = true;
 
     $scope.searchUpdated = function() {
-      if ($scope.searchInput) {
-        var search = 'Why ' + $scope.verb + ' ' + $scope.searchInput + ' so';
+      if ($scope.noun) {
+        var search = 'Why ' + $scope.verb + ' ' + $scope.noun + ' so';
         if (startSearch) {
           $timeout.cancel(startSearch);
         }
 
         startSearch = $timeout(function() {
           $location.search('verb', $scope.verb);
-          $location.search('noun', $scope.searchInput);
+          $location.search('noun', $scope.noun);
           $window.document.title = search + '...';
           socket.emit('searchInput:changed', {search: search});
         }, 200);
@@ -132,26 +153,24 @@
         }
         sendAnalytics = $timeout(function() {
           sendAnalytics = null;
-          ga('send', 'event', 'searchInput', 'typed', search);
+          ga('send', 'event', 'noun', 'typed', search);
         }, 750, false);
       } else {
         if (!firstSearchUpdate) {
-          $location.search('verb', null);
-          $location.search('noun', null);
-          resetSuggestions();
-          $window.document.title = 'Why is "X" so...';
+          _restoreState();
         } else {
           firstSearchUpdate = false;
         }
       }
     }
     
-    $scope.$watch('verb + searchInput', $scope.searchUpdated);
+    $scope.$watch('verb + noun', $scope.searchUpdated);
 
     $scope.isSame = function(suggestion, provider) {
       return $scope.suggestions[provider].indexOf(suggestion) > -1;
     };
 
+    // Setup Genie //
     $scope.wishMade = function(wish) {
       if (wish && wish.magicWords) {
         ga('send', 'event', 'wish', 'made', wish.magicWords);
@@ -163,7 +182,7 @@
     function updateAlert(strong, content, type, link) {
       $scope.alert.strong = strong;
       $scope.alert.content = content;
-      $scope.alert.type = type;
+      $scope.alert.type = type || 'info';
       $scope.alert.link = link;
       $scope.alert.visible = !!strong || !!content;
     }
@@ -177,11 +196,13 @@
       });
     }
 
-    addQuestionWish('What is this site?', 'Why is "X" so...', 'is just a project that I made one day because I was fascinated by how much you can learn about the world\'s perspective on things by searching that phrase online and seeing what the recommendations are. I realize that most people only search that in a negative context, but it\'s still pretty interesting.', 'info');
-    addQuestionWish('Can I change this from "is" to "are"?', 'Yes', 'just click on the word "is"', 'info');
+    addQuestionWish('What is this site?', 'Why is "X" so...', 'is just a project that I made one day because I was fascinated by how much you can learn about the world\'s perspective on things by searching that phrase online and seeing what the recommendations are. I realize that most people only search that in a negative context, but it\'s still pretty interesting.');
+    addQuestionWish('Can I change this from "is" to "are"?', 'Yes', 'just click on the word "is"');
     addQuestionWish('What is this magic box?', 'Genie\'s Lamp.', 'Genie is an open source library that I wrote. I can\'t build a site without it anymore', 'info', 'http://kent.doddsfamily.us/genie');
     addQuestionWish('Who are you?', 'Kent C. Dodds', 'I am a web developer. I love JavaScript, AngularJS, NodeJS, etc. I\'m a family man with one wife, and two kids.', 'info', 'http://kent.doddsfamily.us');
 
+
+    // Setup query string
     $scope.$watch(function() {
       return $location.search();
     }, function(queryParams) {
@@ -190,7 +211,53 @@
           $scope.verb = queryParams.verb;
         }
       }
-      $scope.searchInput = queryParams.noun || $scope.searchInput;
+      $scope.noun = queryParams.noun || $scope.noun;
     });
+
+    // Setup Placeholder loop
+    var placeholders = {
+      is: [
+        'Chuck Norris',
+        'the iPad',
+        'Apple',
+        'government',
+        'he',
+        'Steve Jobs',
+        'Nelson Mandela',
+        'Facebook',
+        'Google',
+        'Bing',
+        'the iPhone',
+        'Twitter',
+        'she'
+      ],
+      are: [
+        'people',
+        'android phones',
+        'men',
+        'christians',
+        'Americans',
+        'women',
+        'chickens',
+        'basketball players',
+        'guys',
+        'mormons',
+        'android tablets',
+        'girls',
+        'cats',
+        'monkeys',
+        'soccer players'
+      ]
+    };
+    $scope.placeholderVisible = true;
+    function updatePlaceholder() {
+      $scope.placeholderVisible = false;
+      $timeout(function() {
+        $scope.placeholderVisible = true;
+        $scope.nounPlaceholder = placeholders[$scope.verb][Math.floor(Math.random() * placeholders[$scope.verb].length)];
+        $timeout(updatePlaceholder, 1250);
+      }, 500);
+    }
+    updatePlaceholder();
   });
 })();

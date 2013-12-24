@@ -25,7 +25,7 @@
     height: 740px;
   }
   
-  #search-input {
+  #noun {
     height: 40px;
     font-size: 26px;
     padding: 0px 6px 0px 6px;
@@ -78,7 +78,7 @@
     width: 850px;
   }
 
-  #search-input {
+  #noun {
     height: 90px;
     font-size: 60px;
     padding: 0 12px 0 12px;
@@ -94,21 +94,6 @@
 
   #share-search {
     margin-top: 15px;
-  }
-
-  #share-search > span {
-    background: rgba(0, 0, 0, 0);
-    color: #428BCA;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-
-  #share-search > span:hover, #share-search > span:focus {
-    text-decoration: underline;
-    color: #2A6496;
-    outline: 0;
-    text-decoration: underline;
   }
 
   .genie-container {
@@ -168,7 +153,7 @@
     margin: 70px auto -170px;
   }
   
-  #search-input {
+  #noun {
     width: 54%;
     display: inline;
   }
@@ -180,20 +165,43 @@
   #verb {
     cursor: pointer;
   }
-  
+
+  #noun[placeholder]::-webkit-input-placeholder {
+    transition: opacity 0.25s ease;
+    opacity: 0;
+  }
+
+  #noun[placeholder].placeholder-visible::-webkit-input-placeholder {
+    opacity: 1;
+  }
+
   .alert-container {
     position: relative;
     transition: all .2s ease-in-out;
     opacity: 0;
     z-index: -1;
   }
-  
+
   .alert {
     position: absolute;
     width: 100%;
     box-shadow: 0px 0px 18px 1px #888
   }
-  
+
+  #share-search > span {
+    background: rgba(0, 0, 0, 0);
+    color: #428BCA;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  #share-search > span:hover, #share-search > span:focus {
+    text-decoration: underline;
+    color: #2A6496;
+    outline: 0;
+  }
+
+
   #results-container {
     
   }
