@@ -55,6 +55,93 @@
       'google+': 14
     };
 
+    var placeholders = {
+      is: [
+        'Chuck Norris',
+        'the iPad',
+        'Apple',
+        'government',
+        'he',
+        'Steve Jobs',
+        'Nelson Mandela',
+        'Facebook',
+        'Google',
+        'Bing',
+        'the iPhone',
+        'Twitter',
+        'she',
+        'the NFL',
+        'hockey',
+        'football',
+        'basketball',
+        'Obamacare',
+        'Obama',
+        'Russia'
+      ],
+      are: [
+        'people',
+        'android phones',
+        'men',
+        'christians',
+        'Americans',
+        'women',
+        'chickens',
+        'basketball players',
+        'guys',
+        'mormons',
+        'android tablets',
+        'girls',
+        'cats',
+        'monkeys',
+        'soccer players'
+      ],
+      do: [
+        'people',
+        'babies',
+        'chickens',
+        'cats',
+        'leaves',
+        'we',
+        'men',
+        'women',
+        'dogs'
+      ],
+      does: [
+        'ice',
+        'my',
+        'your',
+        'our',
+        'the sun',
+        'hair',
+        'Obama',
+        'the government',
+        'love',
+        'religion'
+      ],
+      did: [
+        'the chicken',
+        'the government',
+        'I',
+        'you',
+        'Rome',
+        'I get',
+        'I find',
+        'I go',
+        'Obama',
+        'the government'
+      ]
+    };
+
+    function getSearch() {
+      var search = 'Why ' + $scope.verb + ' ' + $scope.noun;
+      switch ($scope.noun) {
+        case 'is':
+        case 'are':
+          search = search + ' so';
+      }
+      return search;
+    }
+
     var getOptions = function() {
       var randomThumb = $scope.thumbMap[$scope.noun.toLowerCase()];
       if (!randomThumb && randomThumb < 0) {
@@ -62,7 +149,7 @@
       }
       return {
         url: encodeURIComponent($window.location.href),
-        title: encodeURIComponent($scope.noun ? 'Why ' + $scope.verb + ' ' + $scope.noun + ' so...' : 'Why is "X" so...'),
+        title: encodeURIComponent($scope.noun ? getSearch() + '...' : 'Why is "X" so...'),
         description: encodeURIComponent('What search engines recommend to complete this statement is very telling...'),
         hashtags: encodeURIComponent('whyisxso'),
         image: encodeURIComponent('http://kent.doddsfamily.us/whyisxso/thumbnails/thumbnail' + randomThumb + '.png')
@@ -74,7 +161,7 @@
         var options = getOptions();
         var fUrl = encodeURIComponent('p[url]') + '=' + options.url;
         var fTitle = encodeURIComponent('p[title]') + '=' + options.title;
-        var fSummary = encodeURIComponent('p[summary]') + '=' + options.description ;
+        var fSummary = encodeURIComponent('p[summary]') + '=' + options.description + ' #' + options.hashtags;
         var fImages = encodeURIComponent('p[images][0]') + '=' + options.image;
         var uri = 'http://www.facebook.com/sharer.php?s=100&';
 
@@ -105,25 +192,25 @@
       $location.search('noun', null);
       resetSuggestions();
       $window.document.title = 'Why is "X" so...';
-    };
+    }
 
     $scope.verb = 'is';
     $scope.genieVisible = false;
 
     $scope.encodeURIComponent = encodeURIComponent;
 
-    $scope.needTip = true;
+    var needTip = true;
 
     socket.on('suggestions:received', function(data) {
       $scope.suggestions = data;
-      if ($scope.needTip) {
-        $scope.needTip = false;
+      if (needTip) {
+        needTip = false;
         $timeout(function() {
           updateAlert('Tip:', 'Try clicking on the word "is"');
           $timeout(function() {
             updateAlert();
-          }, 4000);
-        }, 3000);
+          }, 3000);
+        }, 2500);
       }
       if (!$scope.noun) {
         _restoreState();
@@ -134,9 +221,22 @@
     var startSearch = null;
     var firstSearchUpdate = true;
 
-    $scope.searchUpdated = function() {
+    var verbs = [
+      'is', 'are', 'do', 'does', 'did'
+    ];
+    $scope.nextVerb = function() {
+      var next = verbs.indexOf($scope.verb) + 1;
+      if (next >= verbs.length) {
+        next = 0;
+      }
+      $scope.verb = verbs[next];
+      _searchUpdated();
+      needTip = false;
+    };
+
+    function _searchUpdated() {
       if ($scope.noun) {
-        var search = 'Why ' + $scope.verb + ' ' + $scope.noun + ' so';
+        var search = getSearch();
         if (startSearch) {
           $timeout.cancel(startSearch);
         }
@@ -164,7 +264,7 @@
       }
     }
     
-    $scope.$watch('verb + noun', $scope.searchUpdated);
+    $scope.$watch('verb + noun', _searchUpdated);
 
     $scope.isSame = function(suggestion, provider) {
       return $scope.suggestions[provider].indexOf(suggestion) > -1;
@@ -207,7 +307,7 @@
       return $location.search();
     }, function(queryParams) {
       if (queryParams.verb) {
-        if (queryParams.verb === 'is' || queryParams.verb === 'are') {
+        if (verbs.indexOf(queryParams.verb) > -1) {
           $scope.verb = queryParams.verb;
         }
       }
@@ -215,46 +315,16 @@
     });
 
     // Setup Placeholder loop
-    var placeholders = {
-      is: [
-        'Chuck Norris',
-        'the iPad',
-        'Apple',
-        'government',
-        'he',
-        'Steve Jobs',
-        'Nelson Mandela',
-        'Facebook',
-        'Google',
-        'Bing',
-        'the iPhone',
-        'Twitter',
-        'she'
-      ],
-      are: [
-        'people',
-        'android phones',
-        'men',
-        'christians',
-        'Americans',
-        'women',
-        'chickens',
-        'basketball players',
-        'guys',
-        'mormons',
-        'android tablets',
-        'girls',
-        'cats',
-        'monkeys',
-        'soccer players'
-      ]
-    };
     $scope.placeholderVisible = true;
     function updatePlaceholder() {
       $scope.placeholderVisible = false;
       $timeout(function() {
         $scope.placeholderVisible = true;
-        $scope.nounPlaceholder = placeholders[$scope.verb][Math.floor(Math.random() * placeholders[$scope.verb].length)];
+        var next = Math.floor(Math.random() * placeholders[$scope.verb].length);
+        if (next === placeholders[$scope.verb].indexOf($scope.nounPlaceholder)) {
+          next++;
+        }
+        $scope.nounPlaceholder = placeholders[$scope.verb][next];
         $timeout(updatePlaceholder, 1250);
       }, 500);
     }

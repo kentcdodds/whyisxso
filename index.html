@@ -20,11 +20,11 @@
       <div id="why-is" class="row">
         <span>Why 
           <span class="dropdown">
-          <span id="verb" ng-click="verb=(verb==='is' ? 'are' : 'is'); searchUpdated(noun); needTip=false" ga>
+          <span id="verb" ng-click="nextVerb()" ga>
             {{verb}}
           </span>
         </span> 
-        </span><input id="noun" type="text" ng-model="noun" class="form-control" autofocus="true" placeholder="{{nounPlaceholder}}" ng-class="{'placeholder-visible': placeholderVisible}"><span> so...</span>
+        </span><input id="noun" type="text" ng-model="noun" class="form-control {{verb}}-width" autofocus="true" placeholder="{{nounPlaceholder}}" ng-class="{'placeholder-visible': placeholderVisible}"><span ng-show="verb!=='do' && verb!=='did' && verb!=='does'"> so...</span>
       </div>
 
       <div class="alert-container" ng-class="{visible: alert.visible}">
