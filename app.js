@@ -36,8 +36,30 @@
     }
     resetSuggestions();
 
+    $scope.thumbMap = {
+      'chuck norris': 0,
+      puppies: 1,
+      government: 2,
+      facebook: 3,
+      americans: 4,
+      twitter: 5,
+      bing: 6,
+      apple: 7,
+      google: 8,
+      microsoft: 9,
+      iphones: 10,
+      ipads: 11,
+      'android phones': 12,
+      'androids': 12,
+      'android tablets': 13,
+      'google+': 14
+    };
+
     var getOptions = function() {
-      var randomThumb = Math.floor(Math.random() * 15);
+      var randomThumb = $scope.thumbMap[$scope.searchInput.toLowerCase()];
+      if (!randomThumb && randomThumb < 0) {
+        randomThumb = Math.floor(Math.random() * 15);
+      }
       return {
         url: encodeURIComponent($window.location.href),
         title: encodeURIComponent($scope.searchInput ? 'Why ' + $scope.verb + ' ' + $scope.searchInput + ' so...' : 'Why is "X" so...'),
@@ -100,6 +122,7 @@
         startSearch = $timeout(function() {
           $location.search('verb', $scope.verb);
           $location.search('noun', $scope.searchInput);
+          $window.document.title = search;
           socket.emit('searchInput:changed', {search: search});
         }, 200);
 
@@ -114,6 +137,7 @@
         $location.search('verb', null);
         $location.search('noun', null);
         resetSuggestions();
+        $window.document.title = 'Why is "X" so...';
       }
     }
     
