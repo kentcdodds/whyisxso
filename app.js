@@ -134,7 +134,7 @@
 
     function getSearch() {
       var search = 'Why ' + $scope.verb + ' ' + $scope.noun;
-      switch ($scope.noun) {
+      switch ($scope.verb) {
         case 'is':
         case 'are':
           search = search + ' so';
